@@ -1,8 +1,8 @@
 package main
 
 import (
+	"Cerebral-Palsy-Detection-System/controller"
 	"github.com/gin-gonic/gin"
-	"github/Intelligent-scheduling-system/controller"
 )
 
 func CollectRoutes(r *gin.Engine) *gin.Engine {
@@ -11,4 +11,6 @@ func CollectRoutes(r *gin.Engine) *gin.Engine {
 	r.GET("/UserBaseInfo", controller.UserbaseInfor)
 	// POST
 	r.POST("/UserLogin", controller.UserLogin)
+
+	return r
 }
