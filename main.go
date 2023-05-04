@@ -1,14 +1,12 @@
 package main
 
-import (
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gin-gonic/gin"
 
 func main() {
 
 	r := gin.Default()
 
-	r = CollectRoute(r)
+	r = CollectRoutes(r)
 
 	panic(r.Run(":8080"))
 }
