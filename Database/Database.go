@@ -33,3 +33,18 @@ func NewConnPool(maxConn int) (*ConnPool, error) {
 	}
 	return &ConnPool{conns: conns}, nil
 }
+
+// Get 从连接池中获取一个连接
+func (p *ConnPool) Get() (*mongo.Client, error) {
+	select {
+	case db := <-p.conns:
+		return db, nil
+	default:
+		return nil, nil
+	}
+}
+
+// Release 将连接放回连接池中
+func (p *ConnPool) Release(db *mongo.Client) {
+	p.conns <- db
+}
