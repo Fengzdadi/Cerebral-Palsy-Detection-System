@@ -1,7 +1,11 @@
 # 接口文档
 
 ## GET请求部分
-1. 获取用户基本信息
+1. 测试请求
+   + /Hello
+   + return (json)
+      + `message` "Hello, World!"
+2. 获取用户基本信息
     + /UserBaseInfo
     + body
         + `Username` 用户名
