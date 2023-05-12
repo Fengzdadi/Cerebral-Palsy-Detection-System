@@ -5,7 +5,7 @@ type User struct {
 	Username string `bson:"Username"`
 	Age      int    `bson:"Age"`
 	Gender   int    `bson:"Gender"`
-	phone    string `bson:"phone"`
-	email    string `bson:"email"`
+	Phone    string `bson:"Phone"`
+	Email    string `bson:"Email"`
 	Password string `bson:"Password"`
 }
