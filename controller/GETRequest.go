@@ -2,6 +2,7 @@ package controller
 
 import (
 	"Cerebral-Palsy-Detection-System/Database"
+	"Cerebral-Palsy-Detection-System/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,7 +12,8 @@ func Hello(c *gin.Context) {
 	})
 }
 
-func UserBaseInfor(c *gin.Context) {
-	j := Database.GetUserinfo(c.PostForm("name"))
-	c.JSON(200, j)
+func UserBaseInfo(c *gin.Context) {
+	var user model.User
+	Database.GetUserinfo(c.PostForm("Username"), &user)
+	c.JSON(200, user)
 }

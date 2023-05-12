@@ -24,12 +24,16 @@ func DatabaseInit() {
 // NewConnPool 初始化mongoDB连接池
 func NewConnPool(maxConn int) (*ConnPool, error) {
 	conns := make(chan *mongo.Client, maxConn)
+	// ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	for i := 0; i < maxConn; i++ {
-		client, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://localhost:27017"))
+		conn, err := mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://localhost:27017"))
+		// databases, _ := conn.ListDatabaseNames(ctx, bson.M{})
+		// log.Printf("%v", databases)
 		if err != nil {
+			log.Fatal(err)
 			return nil, err
 		}
-		conns <- client
+		conns <- conn
 	}
 	return &ConnPool{conns: conns}, nil
 }
