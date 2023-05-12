@@ -8,7 +8,7 @@ import (
 func CollectRoutes(r *gin.Engine) *gin.Engine {
 	// GET
 	r.GET("/Hello", controller.Hello)
-	r.GET("/UserBaseInfo", controller.UserBaseInfor)
+	r.GET("/UserBaseInfo", controller.UserBaseInfo)
 	// POST
 	r.POST("/UserLogin", controller.UserLogin)
 	// r.POST("/UserRegister", controller.UserRegister)
