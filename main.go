@@ -16,5 +16,5 @@ func main() {
 
 	r = CollectRoutes(r)
 
-	panic(r.Run("192.168.61.111: 8080"))
+	panic(r.Run(": 8080"))
 }
