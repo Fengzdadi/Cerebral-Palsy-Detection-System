@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"Cerebral-Palsy-Detection-System/Algorithm"
 	"Cerebral-Palsy-Detection-System/Database"
+	"Cerebral-Palsy-Detection-System/model"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -11,10 +14,30 @@ import (
 	"time"
 )
 
+func UserBaseInfo(c *gin.Context) {
+	var user model.User
+	fmt.Print(c.PostForm("Username"))
+	Database.GetUserinfo(c.PostForm("Username"), &user)
+	c.JSON(200, user)
+}
+
+func VideoRes(c *gin.Context) {
+	var res model.Result
+	Database.GetRes(c.PostForm("VideoId"), &res)
+	c.JSON(200, res)
+}
+
+func startDetection(c *gin.Context) {
+	Algorithm.StartAlgorithm()
+	c.JSON(200, gin.H{
+		"message": "StartDetection, Success!",
+	})
+}
+
 func UserLogin(c *gin.Context) {
-	UserID := c.PostForm("UserID")
-	UserPassword := c.PostForm("UserPassword")
-	switch Database.UserCheck(UserID, UserPassword) {
+	Username := c.PostForm("Username")
+	UserPassword := c.PostForm("Password")
+	switch Database.UserCheck(Username, UserPassword) {
 	case 1:
 		c.JSON(200, gin.H{
 			"message": "UserLogin, Success!",
@@ -35,6 +58,7 @@ func VideoUpload(c *gin.Context) {
 	if err != nil {
 		c.String(http.StatusInternalServerError, "读取失败："+err.Error())
 	}
+
 	var uploadDir string
 	uploadDir = "../files/"
 	_, err = os.Stat(uploadDir)
