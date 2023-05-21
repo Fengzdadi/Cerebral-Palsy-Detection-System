@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-func UserCheck(UserID string, UserPassword string) int {
+func UserCheck(Username string, UserPassword string) int {
 	// 取出连接池中的连接
 	conn, err := Pool.Get()
 	defer Pool.Release(conn)
@@ -29,12 +29,12 @@ func UserCheck(UserID string, UserPassword string) int {
 		log.Fatal(err)
 		return 0
 	}
-	err = collection.FindOne(context.Background(), bson.M{"Userid": UserID}).Decode(&result)
+	err = collection.FindOne(context.Background(), bson.M{"Username": Username}).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return 0
 		}
-		return 0
+		return -1
 	}
 	if result.Password == UserPassword {
 		return 1
@@ -67,6 +67,35 @@ func GetUserinfo(name string, user *model.User) {
 		}
 		log.Fatal(err)
 	}
+	user.Password = "This is a secret!"
 	fmt.Print(user)
+	return
+}
+
+func GetRes(id string, res *model.Result) {
+	conn, err := Pool.Get()
+	defer Pool.Release(conn)
+	if conn == nil {
+		log.Fatal(err)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	collection := conn.Database("CPDS_TEST").Collection("Result")
+	if collection == nil {
+		log.Fatal(err)
+	}
+
+	filter := bson.D{{"VideoId", id}}
+
+	err = collection.FindOne(context.Background(), filter).Decode(&res)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return
+		}
+		log.Fatal(err)
+	}
+	fmt.Print(res)
 	return
 }

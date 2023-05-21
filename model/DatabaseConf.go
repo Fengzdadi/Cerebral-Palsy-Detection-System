@@ -9,3 +9,10 @@ type User struct {
 	Email    string `bson:"Email"`
 	Password string `bson:"Password"`
 }
+
+type Result struct {
+	VideoName int    `bson:"VideoName"`
+	Userid    int    `bson:"Userid"`
+	VideoPath string `bson:"VideoPath"`
+	VideoRes  string `bson:"VideoRes"`
+}

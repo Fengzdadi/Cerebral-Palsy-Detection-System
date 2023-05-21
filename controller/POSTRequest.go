@@ -21,17 +21,10 @@ func UserBaseInfo(c *gin.Context) {
 	c.JSON(200, user)
 }
 
-func VideoRes(c *gin.Context) {
+func StartDetection(c *gin.Context) {
 	var res model.Result
-	Database.GetRes(c.PostForm("VideoId"), &res)
+	Algorithm.StartAlgorithm(&res)
 	c.JSON(200, res)
-}
-
-func startDetection(c *gin.Context) {
-	Algorithm.StartAlgorithm()
-	c.JSON(200, gin.H{
-		"message": "StartDetection, Success!",
-	})
 }
 
 func UserLogin(c *gin.Context) {

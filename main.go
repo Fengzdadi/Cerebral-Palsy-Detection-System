@@ -12,9 +12,14 @@ func main() {
 
 	r := gin.Default()
 
+	err := r.SetTrustedProxies(nil)
+	if err != nil {
+		return
+	}
+
 	r.Use(middleware.Cors())
 
 	r = CollectRoutes(r)
 
-	panic(r.Run(": 8080"))
+	panic(r.Run(":8080"))
 }
