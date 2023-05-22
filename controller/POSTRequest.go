@@ -9,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
 	"strconv"
 	"time"
 )
@@ -53,7 +52,8 @@ func VideoUpload(c *gin.Context) {
 	}
 
 	var uploadDir string
-	uploadDir = "../files/"
+	// uploadDir = "../files/"
+	uploadDir = "./VProcessing/"
 	_, err = os.Stat(uploadDir)
 	if os.IsNotExist(err) {
 		err := os.Mkdir(uploadDir, os.ModePerm)
@@ -63,7 +63,8 @@ func VideoUpload(c *gin.Context) {
 	}
 
 	fileId := strconv.FormatInt(time.Now().Unix(), 10)
-	newVideoName := fileId + path.Ext(Video.Filename)
+	newVideoName := "input.mp4"
+	// newVideoName := fileId + path.Ext(Video.Filename)
 	dst := uploadDir + newVideoName
 	uploadErr := c.SaveUploadedFile(Video, dst)
 	if uploadErr != nil {
