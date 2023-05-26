@@ -13,7 +13,7 @@ import (
 func StartAlgorithm(res *model.Result) {
 	// star
 
-	cmd := exec.Command(".\\VProcessing\\runV2.bat")
+	cmd := exec.Command("cmd.exe", "/C", ".\\VProcessing\\runV2.bat")
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 
@@ -28,10 +28,11 @@ func StartAlgorithm(res *model.Result) {
 
 	res.VideoName = 1
 	res.VideoPath = ".\\VProcessing\\output.mp4"
-	res.VideoRes = findPrediction()
+	res.VideoRes = FindPrediction()
+	res.Probability = FindProbability()
 }
 
-func findPrediction() string {
+func FindPrediction() string {
 
 	// 打开txt文件
 	content, err := ioutil.ReadFile(".\\VProcessing\\output.txt")
@@ -44,13 +45,37 @@ func findPrediction() string {
 	if matcherr {
 		return "Error: Connection timed out"
 	} else {
-		re := regexp.MustCompile(`Prediction result: (label_\d+)`)
+		re := regexp.MustCompile(`Prediction result: (.+)`)
 		match := re.FindStringSubmatch(string(content))
-		label := match[1]
-		if label == "" {
-			log.Fatal()
+
+		if len(match) > 1 {
+			return match[1]
+		} else {
+			return "nil"
 		}
-		return label
 	}
 
+}
+
+func FindProbability() string {
+
+	content, err := ioutil.ReadFile(".\\VProcessing\\output.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	rErr := regexp.MustCompile(`Connection timed out`)
+	matcherr := rErr.MatchString(string(content))
+	if matcherr {
+		return "Error: Connection timed out"
+	} else {
+		re := regexp.MustCompile(`Probability: (\d+\.\d+)%`)
+		match := re.FindStringSubmatch(string(content))
+
+		if len(match) > 1 {
+			return match[1]
+		} else {
+			return "nil"
+		}
+	}
 }
