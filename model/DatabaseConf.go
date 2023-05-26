@@ -11,8 +11,9 @@ type User struct {
 }
 
 type Result struct {
-	VideoName int    `bson:"VideoName"`
-	Userid    int    `bson:"Userid"`
-	VideoPath string `bson:"VideoPath"`
-	VideoRes  string `bson:"VideoRes"`
+	VideoName   int    `bson:"VideoName"`
+	Userid      int    `bson:"Userid"`
+	VideoPath   string `bson:"VideoPath"`
+	VideoRes    string `bson:"VideoRes"`
+	Probability string `bson:"Probability"`
 }
