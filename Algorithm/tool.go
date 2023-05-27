@@ -35,7 +35,7 @@ func StartAlgorithm(res *model.Result) {
 func FindPrediction() string {
 
 	// 打开txt文件
-	content, err := ioutil.ReadFile(".\\VProcessing\\output.txt")
+	content, err := ioutil.ReadFile("./VProcessing/output.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
