@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type User struct {
 	Userid   int    `bson:"Userid"`
 	Username string `bson:"Username"`
@@ -10,10 +12,22 @@ type User struct {
 	Password string `bson:"Password"`
 }
 
-type Result struct {
+type VideoResult struct {
 	VideoName   int    `bson:"VideoName"`
 	Userid      int    `bson:"Userid"`
 	VideoPath   string `bson:"VideoPath"`
 	VideoRes    string `bson:"VideoRes"`
 	Probability string `bson:"Probability"`
+}
+
+type Result struct {
+	Time      time.Time `bson:"Time"`
+	Result    float64   `bson:"Result"`
+	ResultAdd string    `bson:"ResultAdd"`
+}
+
+type HisResult struct {
+	Userid     int      `bson:"Userid"`
+	ResultData []Result `bson:"ResultData"`
+	Count      int      `bson:"Count"`
 }
