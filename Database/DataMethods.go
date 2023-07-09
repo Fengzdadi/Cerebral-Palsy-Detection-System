@@ -4,9 +4,10 @@ import (
 	"Cerebral-Palsy-Detection-System/model"
 	"context"
 	"fmt"
+	"log"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 )
 
 func UserCheck(Username string, UserPassword string) int {
@@ -72,7 +73,7 @@ func GetUserinfo(name string, user *model.User) {
 	return
 }
 
-func GetRes(id string, res *model.Result) {
+func GetHisRes(Username string, res *model.HisResult) {
 	conn, err := Pool.Get()
 	defer Pool.Release(conn)
 	if conn == nil {
@@ -82,14 +83,31 @@ func GetRes(id string, res *model.Result) {
 		log.Fatal(err)
 	}
 
-	collection := conn.Database("CPDS_TEST").Collection("Result")
-	if collection == nil {
+	userCollection := conn.Database("CPDS_TEST").Collection("User")
+	if userCollection == nil {
 		log.Fatal(err)
 	}
 
-	filter := bson.D{{"VideoId", id}}
+	userFilter := bson.D{{"Username", Username}}
 
-	err = collection.FindOne(context.Background(), filter).Decode(&res)
+	var user model.User
+	err = userCollection.FindOne(context.Background(), userFilter).Decode(&user)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return
+		}
+		log.Fatal(err)
+	}
+	// fmt.Print(user.Userid)
+
+	resultCollection := conn.Database("CPDS_TEST").Collection("ResultData")
+	if resultCollection == nil {
+		log.Fatal(err)
+	}
+
+	resultFilter := bson.D{{"Userid", user.Userid}}
+
+	err = resultCollection.FindOne(context.Background(), resultFilter).Decode(&res)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return
