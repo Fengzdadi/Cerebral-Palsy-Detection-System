@@ -12,6 +12,14 @@ type User struct {
 	Password string `bson:"Password"`
 }
 
+type SessionData struct {
+	Username string `json:"Username"`
+	Age      int    `json:"Age"`
+	Gender   int    `json:"Gender"`
+	Email    string `json:"Email"`
+	Phone    string `json:"Phone"`
+}
+
 type VideoResult struct {
 	VideoName   int    `bson:"VideoName"`
 	Userid      int    `bson:"Userid"`
@@ -21,6 +29,7 @@ type VideoResult struct {
 }
 
 type Result struct {
+	VideoName int       `bson:"VideoName"`
 	Time      time.Time `bson:"Time"`
 	Result    float64   `bson:"Result"`
 	ResultAdd string    `bson:"ResultAdd"`
