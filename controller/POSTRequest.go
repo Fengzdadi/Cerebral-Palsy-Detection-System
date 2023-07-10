@@ -4,6 +4,7 @@ import (
 	"Cerebral-Palsy-Detection-System/Algorithm"
 	"Cerebral-Palsy-Detection-System/Database"
 	"Cerebral-Palsy-Detection-System/model"
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -19,8 +20,11 @@ func UserBaseInfo(c *gin.Context) {
 	//Database.GetUserinfo(c.PostForm("Username"), &user)
 	//c.JSON(200, user)
 	session := sessions.Default(c)
-	baseInfo := session.Get("mySession")
-	c.JSON(200, baseInfo)
+	Username := session.Get("mySession")
+	var user model.User
+	Database.GetUserinfo(Username.(string), &user)
+	fmt.Print(user)
+	c.JSON(200, user)
 }
 
 func StartDetection(c *gin.Context) {
@@ -32,22 +36,28 @@ func StartDetection(c *gin.Context) {
 func UserLogin(c *gin.Context) {
 	Username := c.PostForm("Username")
 	UserPassword := c.PostForm("Password")
+	// fmt.Print(Username, UserPassword)
 	switch Database.UserCheck(Username, UserPassword) {
 	case 1:
 		// login success with session
 		var user model.User
 		Database.GetUserinfo(Username, &user)
 		session := sessions.Default(c)
-		sessionValues := map[string]interface{}{
-			"Username": Username,
-			"Age":      user.Age,
-			"Gender":   user.Gender,
-			"Email":    user.Email,
-			"Phone":    user.Phone,
+		// cause the session can only store string, so we need to convert the struct to string
+		//sessionValues := model.SessionData{
+		//	Username: Username,
+		//	Age:      user.Age,
+		//	Gender:   user.Gender,
+		//	Email:    user.Email,
+		//	Phone:    user.Phone,
+		//}
+		// fmt.Print(sessionValues)
+		session.Set("mySession", Username)
+		err := session.Save()
+		if err != nil {
+			log.Print(err)
+			return
 		}
-		session.Set("mySession", sessionValues)
-		session.Save()
-
 		c.JSON(200, gin.H{
 			"message": "UserLogin, Success!",
 		})
