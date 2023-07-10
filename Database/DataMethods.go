@@ -31,10 +31,14 @@ func UserCheck(Username string, UserPassword string) int {
 		return 0
 	}
 	err = collection.FindOne(context.Background(), bson.M{"Username": Username}).Decode(&result)
+	// fmt.Println(Username, UserPassword)
+	// fmt.Println(result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
+			log.Println(err)
 			return 0
 		}
+		log.Println(err)
 		return -1
 	}
 	if result.Password == UserPassword {
