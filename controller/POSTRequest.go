@@ -4,7 +4,7 @@ import (
 	"Cerebral-Palsy-Detection-System/Algorithm"
 	"Cerebral-Palsy-Detection-System/Database"
 	"Cerebral-Palsy-Detection-System/model"
-	"fmt"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -14,14 +14,17 @@ import (
 )
 
 func UserBaseInfo(c *gin.Context) {
-	var user model.User
-	fmt.Print(c.PostForm("Username"))
-	Database.GetUserinfo(c.PostForm("Username"), &user)
-	c.JSON(200, user)
+	//var user model.User
+	//fmt.Print(c.PostForm("Username"))
+	//Database.GetUserinfo(c.PostForm("Username"), &user)
+	//c.JSON(200, user)
+	session := sessions.Default(c)
+	baseInfo := session.Get("mySession")
+	c.JSON(200, baseInfo)
 }
 
 func StartDetection(c *gin.Context) {
-	var res model.Result
+	var res model.VideoResult
 	Algorithm.StartAlgorithm(&res)
 	c.JSON(200, res)
 }
@@ -31,6 +34,20 @@ func UserLogin(c *gin.Context) {
 	UserPassword := c.PostForm("Password")
 	switch Database.UserCheck(Username, UserPassword) {
 	case 1:
+		// login success with session
+		var user model.User
+		Database.GetUserinfo(Username, &user)
+		session := sessions.Default(c)
+		sessionValues := map[string]interface{}{
+			"Username": Username,
+			"Age":      user.Age,
+			"Gender":   user.Gender,
+			"Email":    user.Email,
+			"Phone":    user.Phone,
+		}
+		session.Set("mySession", sessionValues)
+		session.Save()
+
 		c.JSON(200, gin.H{
 			"message": "UserLogin, Success!",
 		})
