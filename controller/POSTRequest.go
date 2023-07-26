@@ -3,6 +3,7 @@ package controller
 import (
 	"Cerebral-Palsy-Detection-System/Algorithm"
 	"Cerebral-Palsy-Detection-System/Database"
+	"Cerebral-Palsy-Detection-System/WS/Api"
 	"Cerebral-Palsy-Detection-System/model"
 	"fmt"
 	"github.com/gin-contrib/sessions"
@@ -104,4 +105,8 @@ func VideoUpload(c *gin.Context) {
 	c.JSON(200, resJson)
 
 	return
+}
+
+func UserRegister(c *gin.Context) {
+	Api.UserRegister(c)
 }
