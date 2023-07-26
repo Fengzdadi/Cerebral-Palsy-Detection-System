@@ -10,7 +10,7 @@ import (
 	"regexp"
 )
 
-func StartAlgorithm(res *model.Result) {
+func StartAlgorithm(res *model.VideoResult) {
 	// star
 
 	cmd := exec.Command("cmd.exe", "/C", ".\\VProcessing\\runV2.bat")
