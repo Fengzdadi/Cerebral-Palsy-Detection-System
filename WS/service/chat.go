@@ -156,7 +156,7 @@ func (c *Client) Read() {
 				_ = c.Socket.WriteMessage(websocket.TextMessage, msg)
 			}
 		} else if sendMsg.Type == 3 {
-			results, err := FirsFindtMsg(Conf.MongoDBName, c.SendID, c.ID)
+			results, err := FirstFindtMsg(Conf.MongoDBName, c.SendID, c.ID)
 			if err != nil {
 				log.Println(err)
 			}
