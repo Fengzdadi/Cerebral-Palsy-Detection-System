@@ -2,6 +2,7 @@
 package main
 
 import (
+	"Cerebral-Palsy-Detection-System/WS/service"
 	"Cerebral-Palsy-Detection-System/middleware"
 	_ "Cerebral-Palsy-Detection-System/middleware"
 	"github.com/gin-contrib/sessions"
@@ -12,6 +13,8 @@ import (
 func main() {
 
 	Init()
+
+	go service.Manager.Start()
 
 	r := gin.Default()
 
