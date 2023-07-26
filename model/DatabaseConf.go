@@ -1,9 +1,13 @@
 package model
 
-import "time"
+import (
+	"github.com/jinzhu/gorm"
+	"time"
+)
 
 type User struct {
-	Userid   int    `bson:"Userid"`
+	gorm.Model
+	Userid   int    `bson:"Userid"` // `"grom:"unique;not null`
 	Username string `bson:"Username"`
 	Age      int    `bson:"Age"`
 	Gender   int    `bson:"Gender"`
