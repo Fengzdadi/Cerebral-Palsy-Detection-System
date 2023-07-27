@@ -5,18 +5,8 @@
    + /Hello
    + return (json)
       + `message` "Hello, World!"
-2. 获取用户基本信息
-    + /UserBaseInfo
-    + body
-        + `Username` 用户名
-    + return (json)
-        + `Userid` ID
-        + `Username` 用户名
-        + `Age` 年龄
-        + `Gender` 性别
-        + `Phone` 手机号
-        + `Email` 邮箱
-3. 获取用户历史检测数据
+
+2. 获取用户历史检测数据
    + /UserHisResult
    + return (json)
       + eg.
@@ -42,8 +32,15 @@
         + `Result` 检测结果
         + `ResultAdd` 检测结果文件地址
       + `Count` 检测数据数量
+
+3. 返回视频测试结果 （X）
+   + /ReturnVideoResult
+   + return (json)
+      + `Result` 检测结果
+      + `ResultAdd` 检测结果文件地址
+
 ## POST请求部分
-1. 用户登录
+1. 用户登录 (X)
     + /UserLogin
     + body
         + `Username` 用户名
@@ -52,8 +49,20 @@
         + `message` "UserLogin, No user match!"
         + `message` "UserLogin, Success!"
         + `message` "UserLogin, Failed!"
+
+2. 获取用户基本信息 (X)
+    + /UserBaseInfo
+    + body
+        + `Username` 用户名
+    + return (json)
+        + `Userid` ID
+        + `Username` 用户名
+        + `Age` 年龄
+        + `Gender` 性别
+        + `Phone` 手机号
+        + `Email` 邮箱
       
-2. 视频上传
+3. 视频上传
     + /VideoUpload
     + body
         + `Video` 上传视频文件
@@ -62,3 +71,19 @@
         + `filePath`: dst
         + `videoName`: Video.Filename
         + `fileId`: fileId
+
+4. 开始测试
+    + /StartDetection
+    + body
+        + `VideoName` 视频名
+        + `Userid` 用户ID
+        + `VideoPath` 视频路径
+        + `VideoRes` 结果
+        + `Probability` 检测结果
+
+## WS请求部分
+1. 请求对话
+    + /UserRegister
+    + parameters
+        + `uid` 请求用户
+        + `toUid` 对象用户
