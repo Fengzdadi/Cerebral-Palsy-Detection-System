@@ -35,6 +35,7 @@ func CollectRoutes(r *gin.Engine) *gin.Engine {
 	// Video part
 	r.POST("/UploadVideo", controller.VideoUpload)
 	r.POST("/StartDetection", controller.StartDetection)
+	r.POST("/StartDetectionTest", controller.StartDetectionTest)
 
 	// Database part
 

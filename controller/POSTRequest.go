@@ -34,6 +34,16 @@ func StartDetection(c *gin.Context) {
 	c.JSON(200, res)
 }
 
+func StartDetectionTest(c *gin.Context) {
+	c.JSON(200, model.VideoResult{
+		VideoName:   11114,
+		Userid:      1523,
+		VideoPath:   "1",
+		VideoRes:    "1",
+		Probability: "0.97",
+	})
+}
+
 func UserLogin(c *gin.Context) {
 	Username := c.PostForm("Username")
 	UserPassword := c.PostForm("Password")
