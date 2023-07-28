@@ -81,6 +81,15 @@
         + `VideoRes` 结果
         + `Probability` 检测结果
 
+5. 开始测试 测试版
+    + /StartDetectionTest
+    + return (json)
+        + `VideoName`: "successful"
+        + `Userid`: dst
+        + `VideoPath`: Video.Filename
+        + `VideoRes`: Video.Filename
+        + `Probability`: fileId
+
 ## WS请求部分
 1. 请求对话
     + /UserRegister
