@@ -31,9 +31,9 @@ func init() {
 func Redis() {
 	db, _ := strconv.ParseUint(RedisDbName, 10, 64)
 	client := redis.NewClient(&redis.Options{
-		Addr: RedisAddr,
-		//Password: conf.RedisPw,  // 无密码，就这样就好了
-		DB: int(db),
+		Addr:     RedisAddr,
+		Password: RedisPw, // 无密码，就这样就好了
+		DB:       int(db),
 	})
 	_, err := client.Ping().Result()
 	if err != nil {
