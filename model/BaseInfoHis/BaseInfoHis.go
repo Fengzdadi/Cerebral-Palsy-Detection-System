@@ -8,7 +8,7 @@ import (
 
 type BaseInfoHis struct {
 	gorm            gorm.Model
-	BelongToChildID int       `gorm:"BelongtoChildID"`
+	BelongToChildID int       `gorm:"BelongToChildID"`
 	Time            time.Time `gorm:"Time"`
 	height          float64   `gorm:"height"`
 	weight          float64   `gorm:"weight"`
