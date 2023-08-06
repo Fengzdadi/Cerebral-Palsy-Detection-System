@@ -1,4 +1,4 @@
-package Api
+package WsApi
 
 import (
 	"Cerebral-Palsy-Detection-System/WS/Conf"
@@ -9,7 +9,19 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// For the ErrorResponse in the Api\user.go, it is a function that returns a Serializer.Response struct.
+type MyError struct {
+	Message string
+}
+
+func (e *MyError) Error() string {
+	return e.Message
+}
+
+func MyErrorResponse(message string) error {
+	return &MyError{Message: message}
+}
+
+// For the ErrorResponse in the WsApi\user.go, it is a function that returns a Serializer.Response struct.
 func ErrorResponse(err error) Serializer.Response {
 	if ve, ok := err.(validator.ValidationErrors); ok {
 		for _, e := range ve {
