@@ -1,4 +1,4 @@
-package controller
+package GET
 
 import (
 	"Cerebral-Palsy-Detection-System/Database"
