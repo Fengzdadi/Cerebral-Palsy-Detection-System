@@ -1,8 +1,6 @@
 package GET
 
 import (
-	"Cerebral-Palsy-Detection-System/Database"
-	"Cerebral-Palsy-Detection-System/model"
 	"github.com/gin-gonic/gin"
 	"io"
 	"os"
@@ -31,10 +29,10 @@ func ReturnVideoRes(c *gin.Context) {
 	}
 }
 
-func GetHisResult(c *gin.Context) {
-	Username := c.Query("Username")
-	// 连接mongodb
-	var res model.HisResult
-	Database.GetHisRes(Username, &res)
-	c.JSON(200, res)
-}
+//func GetHisResult(c *gin.Context) {
+//	Username := c.Query("Username")
+//	// 连接mongodb
+//	var res model.HisResult
+//	Database.GetHisRes(Username, &res)
+//	c.JSON(200, res)
+//}
