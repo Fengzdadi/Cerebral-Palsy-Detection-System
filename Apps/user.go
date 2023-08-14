@@ -14,7 +14,6 @@ func UserRegister(c *gin.Context) {
 		res := userRegister.Register()
 		c.JSON(200, res)
 	} else {
-
 		c.JSON(400, WsApi.ErrorResponse(err))
 		logging.Info(err)
 	}
@@ -24,8 +23,15 @@ func UserLogin(c *gin.Context) {
 	var userLogin service.UserLoginService
 	if err := c.ShouldBind(&userLogin); err == nil {
 		res := userLogin.Login()
+		// 从数据库查找用户的id
+		var userid uint
+		userid = service.GetUserid(c.PostForm("user_name"))
 		session := sessions.Default(c)
-		session.Set("mySession", c.PostForm("Username"))
+		session.Set("mySession", userid)
+		err := session.Save()
+		if err != nil {
+			return
+		}
 		c.JSON(200, res)
 	} else {
 		c.JSON(400, WsApi.ErrorResponse(err))
