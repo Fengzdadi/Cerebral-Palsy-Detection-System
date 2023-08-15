@@ -1,7 +1,6 @@
-package BaseInfoHis
+package model
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/model"
 	"github.com/jinzhu/gorm"
 	"time"
 )
@@ -14,13 +13,13 @@ type BaseInfoHis struct {
 	weight          float64   `gorm:"weight"`
 }
 
-func (b *BaseInfoHis) GetBaseInfoHis(belongToChildID int) ([]BaseInfoHis, error) {
+func GetBaseInfoHis(belongToChildID int) ([]BaseInfoHis, error) {
 	var bInfoHis []BaseInfoHis
-	err := model.DB.Table("BaseInfoHis").Where("BelongToChildID = ?", belongToChildID).Find(&bInfoHis).Error
+	err := DB.Table("BaseInfoHis").Where("BelongToChildID = ?", belongToChildID).Find(&bInfoHis).Error
 	return bInfoHis, err
 }
 
 func (b *BaseInfoHis) AddBaseInfoHis() error {
-	err := model.DB.Table("BaseInfoHis").Create(&b).Error
+	err := DB.Table("BaseInfoHis").Create(&b).Error
 	return err
 }
