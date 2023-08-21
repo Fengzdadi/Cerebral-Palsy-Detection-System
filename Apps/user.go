@@ -2,10 +2,12 @@ package Apps
 
 import (
 	"Cerebral-Palsy-Detection-System/Apps/WsApi"
+	"Cerebral-Palsy-Detection-System/Utils"
 	"Cerebral-Palsy-Detection-System/WS/service"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	logging "github.com/sirupsen/logrus"
+	"net/http"
 )
 
 func UserRegister(c *gin.Context) {
@@ -24,18 +26,29 @@ func UserLogin(c *gin.Context) {
 	if err := c.ShouldBind(&userLogin); err == nil {
 		res := userLogin.Login()
 		// 从数据库查找用户的id
-		var userid uint
-		userid = service.GetUserid(c.PostForm("user_name"))
-		session := sessions.Default(c)
-		session.Set("mySession", userid)
-		err := session.Save()
-		if err != nil {
-			return
+		if res.Msg == "200" {
+			var userid uint
+			var username = c.PostForm("username")
+
+			userid = service.GetUserid(username)
+			session := sessions.Default(c)
+			session.Set("mySession", userid)
+			err := session.Save()
+			if err != nil {
+				return
+			}
+
+			token, _ := Utils.GenerateToken(username)
+			c.JSON(http.StatusOK, gin.H{
+				"res":   res,
+				"token": token,
+			})
+		} else {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"res":   res,
+				"error": "invalid credentials",
+			})
 		}
-		c.JSON(200, res)
-	} else {
-		c.JSON(400, WsApi.ErrorResponse(err))
-		logging.Info(err)
 	}
 }
 
