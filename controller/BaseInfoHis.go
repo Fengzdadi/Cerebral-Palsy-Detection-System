@@ -11,11 +11,10 @@ func GetBaseInfoHis(c *gin.Context) {
 	session.Get("mySession")
 	userid := session.Get("mySession")
 	b, err := model.GetBaseInfoHis(userid.(int))
-	if err != nil {
-		c.JSON(400, gin.H{"message": err.Error()})
-		return
-	}
-	c.JSON(200, b)
+	c.JSON(200, gin.H{
+		"message": b,
+		"error":   err,
+	})
 }
 
 func AddBaseInfoHis(c *gin.Context) {
@@ -29,8 +28,5 @@ func AddBaseInfoHis(c *gin.Context) {
 	userid := session.Get("mySession")
 	base.BelongToChildID = userid.(int)
 	err := base.AddBaseInfoHis()
-	if err != nil {
-		c.JSON(400, gin.H{"message": err.Error()})
-		return
-	}
+	c.JSON(200, err)
 }
