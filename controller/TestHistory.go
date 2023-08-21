@@ -11,9 +11,11 @@ func GetTestHistory(c *gin.Context) {
 	session.Get("mySession")
 	userid := session.Get("mySession")
 	TH, err := model.GetTestHistory(userid.(int))
-	if err != nil {
-		c.JSON(400, gin.H{"message": err.Error()})
-		return
-	}
-	c.JSON(200, TH)
+	c.JSON(200, gin.H{
+		"message": TH,
+		"error":   err,
+	})
 }
+
+// AddTestHistory function for add message of test history
+func AddTestHistory() {}
