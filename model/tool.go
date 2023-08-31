@@ -3,7 +3,6 @@ package model
 import (
 	"Cerebral-Palsy-Detection-System/WS/Pkg/e"
 	"Cerebral-Palsy-Detection-System/WS/Serializer"
-	"Cerebral-Palsy-Detection-System/WS/model"
 	logging "github.com/sirupsen/logrus"
 )
 
@@ -14,10 +13,10 @@ type UserRegisterService struct {
 }
 
 func (service UserRegisterService) Register() Serializer.Response {
-	var user model.User
+	var user User
 	var count int
 	code := e.SUCCESS
-	model.DB.Model(&model.User{}).Where("user_name=?", service.UserName).Count(&count)
+	DB.Model(&User{}).Where("user_name=?", service.UserName).Count(&count)
 	if count == 1 {
 		code = e.ERROR
 		return Serializer.Response{
@@ -26,9 +25,9 @@ func (service UserRegisterService) Register() Serializer.Response {
 			Data: "已经存在该用户了",
 		}
 	}
-	user = model.User{
+	user = User{
 		UserName: service.UserName,
-		Status:   model.Active,
+		Status:   Active,
 	}
 	//加密密码
 	if err := user.SetPassword(service.Password); err != nil {
@@ -41,7 +40,7 @@ func (service UserRegisterService) Register() Serializer.Response {
 	}
 	user.Avatar = "http://q1.qlogo.cn/g?b=qq&nk=294350394&s=640"
 	//创建用户
-	if err := model.DB.Create(&user).Error; err != nil {
+	if err := DB.Create(&user).Error; err != nil {
 		logging.Info(err)
 		code = e.ErrorDatabase
 		return Serializer.Response{

@@ -1,7 +1,7 @@
 package Conf
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/model"
+	"Cerebral-Palsy-Detection-System/model"
 	"context"
 	"fmt"
 	logging "github.com/sirupsen/logrus"
