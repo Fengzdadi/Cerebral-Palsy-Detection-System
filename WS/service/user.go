@@ -3,7 +3,8 @@ package service
 import (
 	"Cerebral-Palsy-Detection-System/WS/Pkg/e"
 	"Cerebral-Palsy-Detection-System/WS/Serializer"
-	"Cerebral-Palsy-Detection-System/WS/model"
+	"Cerebral-Palsy-Detection-System/model"
+	"fmt"
 	logging "github.com/sirupsen/logrus"
 )
 
@@ -83,6 +84,7 @@ func (service UserLoginService) Login() Serializer.Response {
 			Data: "密码错误",
 		}
 	}
+
 	return Serializer.Response{
 		Code: code,
 		Msg:  e.GetMsg(code),
@@ -102,4 +104,12 @@ func (service UserUpdatePwdService) Update() Serializer.Response {
 		Code: e.SUCCESS,
 		Msg:  e.GetMsg(e.SUCCESS),
 	}
+}
+
+func GetUserid(username string) uint {
+	var user model.User
+	fmt.Println(username)
+	model.DB.Model(&model.User{}).Where("user_name=?", username).First(&user)
+	fmt.Println(user.ID)
+	return user.ID
 }
