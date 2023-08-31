@@ -1,20 +1,19 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
-type User struct {
-	gorm.Model
-	Userid   int    `bson:"Userid"` // `"grom:"unique;not null`
-	Username string `bson:"Username"`
-	Age      int    `bson:"Age"`
-	Gender   int    `bson:"Gender"`
-	Phone    string `bson:"Phone"`
-	Email    string `bson:"Email"`
-	Password string `bson:"Password"`
-}
+//type User struct {
+//	gorm.Model
+//	Userid   int    `bson:"Userid"` // `"grom:"unique;not null`
+//	Username string `bson:"Username"`
+//	Age      int    `bson:"Age"`
+//	Gender   int    `bson:"Gender"`
+//	Phone    string `bson:"Phone"`
+//	Email    string `bson:"Email"`
+//	Password string `bson:"Password"`
+//}
 
 type SessionData struct {
 	Username string `json:"Username"`
