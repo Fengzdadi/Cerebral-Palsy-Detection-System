@@ -1,4 +1,4 @@
-package ws
+package service
 
 type Trainer struct {
 	Content   string `bson:"content"`   // 内容

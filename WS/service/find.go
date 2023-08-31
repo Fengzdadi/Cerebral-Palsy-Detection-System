@@ -2,7 +2,6 @@ package service
 
 import (
 	"Cerebral-Palsy-Detection-System/WS/Conf"
-	"Cerebral-Palsy-Detection-System/WS/model/ws"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
@@ -20,7 +19,7 @@ type SendSortMsg struct {
 
 func InsertMsg(database string, id string, content string, read uint, expire int64) (err error) {
 	collection := Conf.MongoDBClient.Database(database).Collection(id)
-	comment := ws.Trainer{
+	comment := Trainer{
 		Content:   content,
 		StartTime: time.Now().Unix(),
 		EndTime:   time.Now().Unix() + expire,
@@ -30,9 +29,9 @@ func InsertMsg(database string, id string, content string, read uint, expire int
 	return
 }
 
-func FindMany(database string, sendID string, id string, time int64, pageSize int) (results []ws.Result, err error) {
-	var resultsMe []ws.Trainer
-	var resultsYou []ws.Trainer
+func FindMany(database string, sendID string, id string, time int64, pageSize int) (results []Result, err error) {
+	var resultsMe []Trainer
+	var resultsYou []Trainer
 	sendIDCollection := Conf.MongoDBClient.Database(database).Collection(sendID)
 	idCollection := Conf.MongoDBClient.Database(database).Collection(id)
 
@@ -47,10 +46,10 @@ func FindMany(database string, sendID string, id string, time int64, pageSize in
 	return
 }
 
-func FirstFindtMsg(database string, sendId string, id string) (results []ws.Result, err error) {
+func FirstFindtMsg(database string, sendId string, id string) (results []Result, err error) {
 	// 首次查询(把对方发来的所有未读都取出来)
-	var resultsMe []ws.Trainer
-	var resultsYou []ws.Trainer
+	var resultsMe []Trainer
+	var resultsYou []Trainer
 	sendIdCollection := Conf.MongoDBClient.Database(database).Collection(sendId)
 	idCollection := Conf.MongoDBClient.Database(database).Collection(sendId)
 	filter := bson.M{"read": bson.M{
@@ -61,7 +60,7 @@ func FirstFindtMsg(database string, sendId string, id string) (results []ws.Resu
 	if sendIdCursor == nil {
 		return
 	}
-	var unReads []ws.Trainer
+	var unReads []Trainer
 	err = sendIdCursor.All(context.TODO(), &unReads)
 	if err != nil {
 		log.Println("sendIdCursor err", err)
@@ -98,14 +97,14 @@ func FirstFindtMsg(database string, sendId string, id string) (results []ws.Resu
 	return
 }
 
-func AppendAndSort(resultsMe, resultsYou []ws.Trainer) (results []ws.Result, err error) {
+func AppendAndSort(resultsMe, resultsYou []Trainer) (results []Result, err error) {
 	for _, r := range resultsMe {
 		sendSort := SendSortMsg{
 			Content:  r.Content,
 			Read:     r.Read,
 			CreateAt: r.StartTime,
 		}
-		result := ws.Result{
+		result := Result{
 			StartTime: r.StartTime,
 			Msg:       fmt.Sprintf("%v", sendSort),
 			From:      "me",
@@ -118,7 +117,7 @@ func AppendAndSort(resultsMe, resultsYou []ws.Trainer) (results []ws.Result, err
 			Read:     r.Read,
 			CreateAt: r.StartTime,
 		}
-		result := ws.Result{
+		result := Result{
 			StartTime: r.StartTime,
 			Msg:       fmt.Sprintf("%v", sendSort),
 			From:      "you",
