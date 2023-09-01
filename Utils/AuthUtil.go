@@ -10,11 +10,12 @@ import (
 
 var JWT_SECRET = "YourSecretKey"
 
-func GenerateToken(username string) (string, error) {
+func GenerateToken(username string, userid uint) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
+	claims["userid"] = userid
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 	t, err := token.SignedString([]byte(JWT_SECRET))
@@ -41,7 +42,9 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
-		c.Set("user_name", claims["username"])
+		fmt.Println(claims)
+		c.Set("username", claims["username"])
+		c.Set("userid", claims["userid"])
 		c.Next()
 	}
 }
