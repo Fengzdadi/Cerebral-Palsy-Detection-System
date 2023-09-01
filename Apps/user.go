@@ -26,9 +26,9 @@ func UserLogin(c *gin.Context) {
 	if err := c.ShouldBind(&userLogin); err == nil {
 		res := userLogin.Login()
 		// 从数据库查找用户的id
-		if res.Msg == "200" {
+		if res.Code == 200 {
 			var userid uint
-			var username = c.PostForm("username")
+			var username = c.PostForm("user_name")
 
 			userid = service.GetUserid(username)
 			session := sessions.Default(c)
@@ -38,7 +38,7 @@ func UserLogin(c *gin.Context) {
 				return
 			}
 
-			token, _ := Utils.GenerateToken(username)
+			token, _ := Utils.GenerateToken(username, userid)
 			c.JSON(http.StatusOK, gin.H{
 				"res":   res,
 				"token": token,
