@@ -10,16 +10,16 @@ import (
 
 type BaseInfoHis struct {
 	gorm            gorm.Model
-	BelongToChildID int       `gorm:"BelongToChildID"`
-	Time            time.Time `gorm:"Time"`
-	height          float64   `gorm:"height"`
-	weight          float64   `gorm:"weight"`
+	BelongToChildID uint      `form:"BelongToChildID" gorm:"BelongToChildID"`
+	Time            time.Time `form:"Time" gorm:"Time"`
+	Height          float64   `form:"height" gorm:"height"`
+	Weight          float64   `form:"weight" gorm:"weight"`
 }
 
-func GetBaseInfoHis(belongToChildID int) ([]BaseInfoHis, Serializer.Response) {
+func GetBaseInfoHis(belongToChildID uint) ([]BaseInfoHis, Serializer.Response) {
 	var bInfoHis []BaseInfoHis
 	code := e.SUCCESS
-	err := DB.Table("BaseInfoHis").Where("BelongToChildID = ?", belongToChildID).Find(&bInfoHis).Error
+	err := DB.Table("base_info_his").Where("belong_to_child_id = ?", belongToChildID).Find(&bInfoHis).Error
 	if err != nil {
 		logging.Info(err)
 		code := e.ERROR
@@ -36,8 +36,9 @@ func GetBaseInfoHis(belongToChildID int) ([]BaseInfoHis, Serializer.Response) {
 }
 
 func (b *BaseInfoHis) AddBaseInfoHis() Serializer.Response {
+	b.Time = time.Now()
 	code := e.SUCCESS
-	err := DB.Table("BaseInfoHis").Create(&b).Error
+	err := DB.Table("base_info_his").Create(&b).Error
 	if err != nil {
 		code = e.ERROR
 		return Serializer.Response{
