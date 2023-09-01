@@ -5,11 +5,13 @@ import (
 	"Cerebral-Palsy-Detection-System/WS/Serializer"
 	"github.com/jinzhu/gorm"
 	logging "github.com/sirupsen/logrus"
+	"math/rand"
+	"time"
 )
 
 type ChildrenInfo struct {
 	gorm.Model
-	BelongTo  int        `form:"BelongTo" bson:"BelongTo"`
+	BelongTo  uint       `form:"BelongTo" bson:"BelongTo"`
 	ChildName string     `form:"ChildName" bson:"ChildName"`
 	Age       int        `form:"Age" bson:"Age"`
 	Gender    GenderType `form:"Gender" bson:"Gender"`
@@ -43,7 +45,7 @@ func GetChildInfo(belongTo uint) ([]ChildrenInfo, Serializer.Response) {
 	}
 }
 
-func (c *ChildrenInfo) AddChildInfo() Serializer.Response {
+func (c *ChildrenInfo) AddChildInfo(userid uint) Serializer.Response {
 	// 判断是否已经存在
 	var count int
 	code := e.SUCCESS
@@ -57,6 +59,12 @@ func (c *ChildrenInfo) AddChildInfo() Serializer.Response {
 			Data: "已经存在该用户了",
 		}
 	}
+
+	rand.Seed(time.Now().UnixNano())
+	c.ID = uint(rand.Intn(100000000))
+
+	c.BelongTo = userid
+
 	if err := DB.Table("children_info").Create(&c).Error; err != nil {
 		logging.Info(err)
 		code := e.ErrorDatabase
