@@ -47,18 +47,18 @@ func CollectRoutes(r *gin.Engine) *gin.Engine {
 	r.POST("/UserUpdatePwd", Utils.AuthMiddleware(), controller.UserUpdatePwd)
 
 	// BaseInfo part
-	r.GET("/GetBaseInfoHis", controller.GetBaseInfoHis)
-	r.POST("/AddBaseInfoHis", controller.AddBaseInfoHis)
+	r.GET("/GetBaseInfoHis", Utils.AuthMiddleware(), controller.GetBaseInfoHis)
+	r.POST("/AddBaseInfoHis", Utils.AuthMiddleware(), controller.AddBaseInfoHis)
 
 	//ChildInfo part
-	r.GET("/GetChildInfo", controller.GetChildInfo)
-	r.POST("/AddChildInfo", controller.AddChildInfo)
+	r.GET("/GetChildInfo", Utils.AuthMiddleware(), controller.GetChildInfo)
+	r.POST("/AddChildInfo", Utils.AuthMiddleware(), controller.AddChildInfo)
 
 	//Kinship part
-	r.GET("/GetKinship", controller.GetKinship)
+	r.GET("/GetKinship", Utils.AuthMiddleware(), controller.GetKinship)
 
 	//TestHistory part
-	r.GET("/GetTestHistory", controller.GetTestHistory)
+	r.GET("/GetTestHistory", Utils.AuthMiddleware(), controller.GetTestHistory)
 
 	return r
 }
