@@ -3,8 +3,8 @@
 package model
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/Pkg/e"
-	"Cerebral-Palsy-Detection-System/WS/Serializer"
+	"Cerebral-Palsy-Detection-System/Pkg/e"
+	"Cerebral-Palsy-Detection-System/Serializer"
 	"github.com/jinzhu/gorm"
 	logging "github.com/sirupsen/logrus"
 	"time"

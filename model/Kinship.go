@@ -5,7 +5,7 @@ import (
 )
 
 type Kinship struct {
-	gorm                gorm.Model
+	gorm.Model
 	UserID              int              `gorm:"UserID"`
 	TargetID            int              `gorm:"TargetID"`
 	Relationship        RelationshipType `gorm:"Relationship"`

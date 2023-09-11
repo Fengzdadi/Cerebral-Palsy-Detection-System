@@ -30,14 +30,14 @@ var (
 
 func Init() {
 	//从本地读取环境变量
-	file, err := ini.Load("./WS/Conf/config.ini")
+	file, err := ini.Load("./config.ini")
 	if err != nil {
 		fmt.Println("配置文件读取错误，请检查文件路径:", err)
 	}
 	LoadServer(file)
 	LoadMysqlData(file)
 	LoadMongoDB(file)
-	if err := LoadLocales("WS/Conf/locales/zh-cn.yaml"); err != nil {
+	if err := LoadLocales("./locales/zh-cn.yaml"); err != nil {
 		logging.Info(err) //日志内容
 		panic(err)
 	}
