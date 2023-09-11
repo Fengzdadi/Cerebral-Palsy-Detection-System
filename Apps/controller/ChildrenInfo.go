@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"Cerebral-Palsy-Detection-System/Apps/WsApi"
+	"Cerebral-Palsy-Detection-System/Serializer"
 	"Cerebral-Palsy-Detection-System/model"
 	"fmt"
 	"github.com/gin-contrib/sessions"
@@ -15,7 +15,7 @@ func AddChildInfo(c *gin.Context) {
 		res := child.AddChildInfo()
 		c.JSON(200, res)
 	} else {
-		c.JSON(400, WsApi.ErrorResponse(err))
+		c.JSON(400, Serializer.ErrorResponse(err))
 		logging.Info(err)
 	}
 }

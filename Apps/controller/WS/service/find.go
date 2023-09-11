@@ -1,7 +1,7 @@
 package service
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/Conf"
+	"Cerebral-Palsy-Detection-System/Apps/controller/WS/Conf"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"

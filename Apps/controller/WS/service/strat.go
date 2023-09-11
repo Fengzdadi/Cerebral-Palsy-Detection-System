@@ -1,8 +1,8 @@
 package service
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/Conf"
-	"Cerebral-Palsy-Detection-System/WS/Pkg/e"
+	"Cerebral-Palsy-Detection-System/Apps/controller/WS/Conf"
+	"Cerebral-Palsy-Detection-System/Pkg/e"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
@@ -34,7 +34,7 @@ func (manager *ClientManager) Start() {
 				close(conn.Send)
 				delete(Manager.Clients, conn.ID)
 			}
-		//广播信息
+		//广播信息 错x
 		case broadcast := <-Manager.Broadcast:
 			message := broadcast.Message
 			sendId := broadcast.Client.SendID
@@ -43,6 +43,7 @@ func (manager *ClientManager) Start() {
 				if id != sendId {
 					continue
 				}
+				//需设置超时时间
 				select {
 				case conn.Send <- message:
 					flag = true

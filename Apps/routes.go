@@ -1,14 +1,14 @@
-package main
+package Apps
 
 import (
-	"Cerebral-Palsy-Detection-System/Utils"
-	"Cerebral-Palsy-Detection-System/WS/service"
-	"Cerebral-Palsy-Detection-System/controller"
-	"Cerebral-Palsy-Detection-System/controller/GET"
+	"Cerebral-Palsy-Detection-System/Apps/controller"
+	"Cerebral-Palsy-Detection-System/Apps/controller/GET"
+	"Cerebral-Palsy-Detection-System/Apps/controller/WS/service"
+	"Cerebral-Palsy-Detection-System/Apps/middleware"
 	"github.com/gin-gonic/gin"
 )
 
-func CollectRoutes(r *gin.Engine) *gin.Engine {
+func CollectRoutes() {
 	// GET
 	r.GET("/Hello", GET.Hello)
 	// Return video which can show in the front-end
@@ -42,23 +42,24 @@ func CollectRoutes(r *gin.Engine) *gin.Engine {
 
 	// New Request Part
 	// User part
-	r.POST("/UserRegister", controller.UserRegister)
-	r.POST("/UserLogin", controller.UserLogin)
-	r.POST("/UserUpdatePwd", Utils.AuthMiddleware(), controller.UserUpdatePwd)
+	r.POST("/register", controller.UserRegister)
+	r.POST("/login", controller.UserLogin)
+
+	user := r.Group("user", middleware.AuthMiddleware())
+	user.POST("/updatePwd", controller.UserUpdatePwd)
 
 	// BaseInfo part
-	r.GET("/GetBaseInfoHis", controller.GetBaseInfoHis)
-	r.POST("/AddBaseInfoHis", controller.AddBaseInfoHis)
+	user.GET("/getBaseInfoHis", controller.GetBaseInfoHis)
+	user.POST("/addBaseInfoHis", controller.AddBaseInfoHis)
 
 	//ChildInfo part
-	r.GET("/GetChildInfo", controller.GetChildInfo)
-	r.POST("/AddChildInfo", controller.AddChildInfo)
+	user.GET("/getChildInfo", controller.GetChildInfo)
+	user.POST("/addChildInfo", controller.AddChildInfo)
 
 	//Kinship part
-	r.GET("/GetKinship", controller.GetKinship)
+	user.GET("/getKinship", controller.GetKinship)
 
 	//TestHistory part
-	r.GET("/GetTestHistory", controller.GetTestHistory)
+	user.GET("/getTestHistory", controller.GetTestHistory)
 
-	return r
 }

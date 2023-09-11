@@ -2,12 +2,10 @@
 package main
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/service"
-	"Cerebral-Palsy-Detection-System/middleware"
-	_ "Cerebral-Palsy-Detection-System/middleware"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
-	"github.com/gin-gonic/gin"
+	"Cerebral-Palsy-Detection-System/Apps"
+	"Cerebral-Palsy-Detection-System/Apps/controller/WS/Conf"
+	"Cerebral-Palsy-Detection-System/Apps/controller/WS/service"
+	"Cerebral-Palsy-Detection-System/Database"
 )
 
 func main() {
@@ -16,20 +14,12 @@ func main() {
 
 	go service.Manager.Start()
 
-	r := gin.Default()
+	Apps.InitWebFrameWork()
+	Apps.StartServer()
 
-	err := r.SetTrustedProxies(nil)
-	if err != nil {
-		return
-	}
+}
 
-	r.Use(middleware.Cors())
-
-	// Use cookie-based sessions
-	store := cookie.NewStore([]byte("loginUser"))
-	r.Use(sessions.Sessions("session", store))
-
-	r = CollectRoutes(r)
-
-	panic(r.Run(":8080"))
+func Init() {
+	Database.DatabaseInit()
+	Conf.Init()
 }
