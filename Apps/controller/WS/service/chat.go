@@ -1,9 +1,9 @@
 package service
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/Cache"
-	"Cerebral-Palsy-Detection-System/WS/Conf"
-	"Cerebral-Palsy-Detection-System/WS/Pkg/e"
+	"Cerebral-Palsy-Detection-System/Apps/controller/WS/Cache"
+	"Cerebral-Palsy-Detection-System/Apps/controller/WS/Conf"
+	"Cerebral-Palsy-Detection-System/Pkg/e"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -69,6 +69,7 @@ func createId(uid, toUid string) string {
 	return uid + "->" + toUid
 }
 
+// ws://localhost:8080/ws?uid=123&toUid=456
 func WsHandler(c *gin.Context) {
 	uid := c.Query("uid")     // 自己的id
 	toUid := c.Query("toUid") // 对方的id

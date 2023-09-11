@@ -1,9 +1,9 @@
-package Apps
+package controller
 
 import (
-	"Cerebral-Palsy-Detection-System/Apps/WsApi"
-	"Cerebral-Palsy-Detection-System/Utils"
-	"Cerebral-Palsy-Detection-System/WS/service"
+	"Cerebral-Palsy-Detection-System/Algorithm"
+	"Cerebral-Palsy-Detection-System/Serializer"
+	"Cerebral-Palsy-Detection-System/model"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	logging "github.com/sirupsen/logrus"
@@ -11,26 +11,26 @@ import (
 )
 
 func UserRegister(c *gin.Context) {
-	var userRegister service.UserRegisterService
+	var userRegister model.UserRegisterService
 	if err := c.ShouldBind(&userRegister); err == nil {
 		res := userRegister.Register()
 		c.JSON(200, res)
 	} else {
-		c.JSON(400, WsApi.ErrorResponse(err))
+		c.JSON(400, Serializer.ErrorResponse(err))
 		logging.Info(err)
 	}
 }
 
 func UserLogin(c *gin.Context) {
-	var userLogin service.UserLoginService
+	var userLogin model.UserLoginService
 	if err := c.ShouldBind(&userLogin); err == nil {
 		res := userLogin.Login()
 		// 从数据库查找用户的id
-		if res.Code == 200 {
+		if res.Msg == "ok" {
 			var userid uint
 			var username = c.PostForm("user_name")
 
-			userid = service.GetUserid(username)
+			userid = model.GetUserid(username)
 			session := sessions.Default(c)
 			session.Set("mySession", userid)
 			err := session.Save()
@@ -38,7 +38,7 @@ func UserLogin(c *gin.Context) {
 				return
 			}
 
-			token, _ := Utils.GenerateToken(username, userid)
+			token, _ := Algorithm.GenerateToken(username)
 			c.JSON(http.StatusOK, gin.H{
 				"res":   res,
 				"token": token,
@@ -53,12 +53,19 @@ func UserLogin(c *gin.Context) {
 }
 
 func UserUpdatePwd(c *gin.Context) {
-	var userUpdatePwd service.UserUpdatePwdService
-	if err := c.ShouldBind(&userUpdatePwd); err == nil {
-		res := userUpdatePwd.Update()
-		c.JSON(200, res)
+	username := c.PostForm("user_name")
+	session := sessions.Default(c)
+	uid := session.Get("mySession").(uint)
+	if uid == model.GetUserid(username) {
+		var userUpdatePwd model.UserUpdatePwdService
+		if err := c.ShouldBind(&userUpdatePwd); err == nil {
+			res := userUpdatePwd.Update()
+			c.JSON(200, res)
+		} else {
+			c.JSON(400, Serializer.ErrorResponse(err))
+			logging.Info(err)
+		}
 	} else {
-		c.JSON(400, WsApi.ErrorResponse(err))
-		logging.Info(err)
+		c.JSON(400, Serializer.MyErrorResponse("You are not authorized to do this operation"))
 	}
 }
