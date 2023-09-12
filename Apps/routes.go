@@ -61,5 +61,6 @@ func CollectRoutes() {
 
 	//TestHistory part
 	user.GET("/getTestHistory", controller.GetTestHistory)
-
+	user.POST("/addTestHistory", controller.AddTestHistory)
+	user.GET("/getTestHisYear", controller.GetTestHistoryYear)
 }

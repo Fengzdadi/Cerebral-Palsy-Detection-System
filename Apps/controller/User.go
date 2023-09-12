@@ -14,9 +14,13 @@ func UserRegister(c *gin.Context) {
 	var userRegister model.UserRegisterService
 	if err := c.ShouldBind(&userRegister); err == nil {
 		res := userRegister.Register()
-		c.JSON(200, res)
+		c.JSON(200, gin.H{
+			"res": res,
+		})
 	} else {
-		c.JSON(400, Serializer.ErrorResponse(err))
+		c.JSON(400, gin.H{
+			"res": Serializer.ErrorResponse(err),
+		})
 		logging.Info(err)
 	}
 }
@@ -45,10 +49,13 @@ func UserLogin(c *gin.Context) {
 			})
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"res":   res,
-				"error": "invalid credentials",
+				"res": res,
 			})
 		}
+	} else {
+		c.JSON(200, gin.H{
+			"res": Serializer.ErrorResponse(err),
+		})
 	}
 }
 
@@ -60,12 +67,18 @@ func UserUpdatePwd(c *gin.Context) {
 		var userUpdatePwd model.UserUpdatePwdService
 		if err := c.ShouldBind(&userUpdatePwd); err == nil {
 			res := userUpdatePwd.Update()
-			c.JSON(200, res)
+			c.JSON(200, gin.H{
+				"res": res,
+			})
 		} else {
-			c.JSON(400, Serializer.ErrorResponse(err))
+			c.JSON(400, gin.H{
+				"res": Serializer.ErrorResponse(err),
+			})
 			logging.Info(err)
 		}
 	} else {
-		c.JSON(400, Serializer.MyErrorResponse("You are not authorized to do this operation"))
+		c.JSON(400, gin.H{
+			"res": Serializer.MyErrorResponse("You are not authorized to do this operation"),
+		})
 	}
 }
