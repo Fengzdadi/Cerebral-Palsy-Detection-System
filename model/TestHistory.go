@@ -66,7 +66,7 @@ type TestHisYear struct {
 	Probabilities [][]float64 `json:"probability"`
 }
 
-func GetTestHisYear(belongToChildID uint) []TestHisYear {
+func GetTestHisYear(belongToChildID uint) ([]TestHisYear, Serializer.Response) {
 	var ths []TestHistory
 	var thys []TestHisYear
 	m := make(map[int]*TestHisYear)
@@ -117,5 +117,16 @@ func GetTestHisYear(belongToChildID uint) []TestHisYear {
 		thy.Probabilities = v.Probabilities
 		thys = append(thys, thy)
 	}
-	return thys
+	if len(thys) == 0 {
+		return nil, Serializer.Response{
+			Code: 500,
+			Msg:  e.GetMsg(500),
+			Data: "空数据",
+		}
+	}
+	return thys, Serializer.Response{
+		Code: 200,
+		Msg:  e.GetMsg(200),
+		Data: "",
+	}
 }

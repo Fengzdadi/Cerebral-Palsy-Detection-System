@@ -38,8 +38,9 @@ func GetTestHistoryYear(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Get("mySession")
 	userid := session.Get("mySession")
-	thys := model.GetTestHisYear(userid.(uint))
+	thys, res := model.GetTestHisYear(userid.(uint))
 	c.JSON(200, gin.H{
+		"res":  res,
 		"thys": thys,
 	})
 }

@@ -13,9 +13,13 @@ func AddChildInfo(c *gin.Context) {
 	var child model.ChildrenInfo
 	if err := c.ShouldBind(&child); err == nil {
 		res := child.AddChildInfo()
-		c.JSON(200, res)
+		c.JSON(200, gin.H{
+			"res": res,
+		})
 	} else {
-		c.JSON(400, Serializer.ErrorResponse(err))
+		c.JSON(400, gin.H{
+			"res": Serializer.ErrorResponse(err),
+		})
 		logging.Info(err)
 	}
 }
@@ -27,7 +31,7 @@ func GetChildInfo(c *gin.Context) {
 	id := userid.(uint)
 	ch, err := model.GetChildInfo(id)
 	c.JSON(200, gin.H{
-		"message": ch,
-		"error":   err,
+		"childInfo": ch,
+		"res":       err,
 	})
 }
