@@ -9,7 +9,7 @@ import (
 
 type ChildrenInfo struct {
 	gorm.Model
-	BelongTo  int        `form:"belongTo" bson:"BelongTo"`
+	BelongTo  uint       `form:"belongTo" bson:"BelongTo"`
 	ChildName string     `form:"childName" bson:"ChildName"`
 	Age       int        `form:"age" bson:"Age"`
 	Gender    GenderType `form:"gender" bson:"Gender"`

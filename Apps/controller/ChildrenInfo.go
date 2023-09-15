@@ -10,8 +10,12 @@ import (
 )
 
 func AddChildInfo(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Get("mySession")
+	userid := session.Get("mySession")
 	var child model.ChildrenInfo
 	if err := c.ShouldBind(&child); err == nil {
+		child.BelongTo = userid.(uint)
 		res := child.AddChildInfo()
 		c.JSON(200, gin.H{
 			"res": res,
