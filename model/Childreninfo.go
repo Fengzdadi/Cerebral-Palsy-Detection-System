@@ -52,17 +52,18 @@ func (c *ChildrenInfo) AddChildInfo() Serializer.Response {
 	if count > 0 {
 		code := e.ERROR
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
-			Data: "已经存在该用户了",
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "已经存在该用户了",
 		}
 	}
 	if err := DB.Table("children_info").Create(&c).Error; err != nil {
 		logging.Info(err)
 		code := e.ErrorDatabase
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "创建失败",
 		}
 	}
 	return Serializer.Response{

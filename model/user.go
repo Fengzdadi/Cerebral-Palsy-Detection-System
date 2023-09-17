@@ -62,9 +62,9 @@ func (service UserRegisterService) Register() Serializer.Response {
 	if count == 1 {
 		code = e.ERROR
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
-			Data: "已经存在该用户了",
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "已经存在该用户了",
 		}
 	}
 	user = User{
@@ -86,8 +86,9 @@ func (service UserRegisterService) Register() Serializer.Response {
 		logging.Info(err)
 		code = e.ErrorDatabase
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "创建失败",
 		}
 	}
 	return Serializer.Response{
@@ -109,25 +110,24 @@ func (service UserLoginService) Login() Serializer.Response {
 	if count == 0 {
 		code = e.ERROR
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
-			Data: "用户不存在",
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "用户不存在",
 		}
 	}
 	DB.Where("user_name=?", service.UserName).First(&user)
 	if !user.CheckPassword(service.Password) {
 		code = e.ERROR
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
-			Data: "密码错误",
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "密码错误",
 		}
 	}
 
 	return Serializer.Response{
 		Code: code,
 		Msg:  e.GetMsg(code),
-		Data: user.UserName,
 	}
 }
 

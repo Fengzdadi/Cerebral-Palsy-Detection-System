@@ -27,8 +27,9 @@ func GetTestHistory(belongToChildID uint) ([]TestHistory, Serializer.Response) {
 		logging.Info(err)
 		code := e.ERROR
 		return tHistory, Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "查询失败",
 		}
 	} else {
 		code := e.SUCCESS
@@ -46,8 +47,9 @@ func (t TestHistory) AddTestHistory() Serializer.Response {
 	if err != nil {
 		code := e.ERROR
 		return Serializer.Response{
-			Code: code, // code fix
-			Msg:  e.GetMsg(code),
+			Code:  code, // code fix
+			Msg:   e.GetMsg(code),
+			Error: "创建失败",
 		}
 	} else {
 		code := e.SUCCESS
@@ -119,9 +121,9 @@ func GetTestHisYear(belongToChildID uint) ([]TestHisYear, Serializer.Response) {
 	}
 	if len(thys) == 0 {
 		return nil, Serializer.Response{
-			Code: 500,
-			Msg:  e.GetMsg(500),
-			Data: "空数据",
+			Code:  500,
+			Msg:   e.GetMsg(500),
+			Error: "空数据",
 		}
 	}
 	return thys, Serializer.Response{

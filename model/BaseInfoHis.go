@@ -24,8 +24,9 @@ func GetBaseInfoHis(belongToChildID uint) ([]BaseInfoHis, Serializer.Response) {
 		logging.Info(err)
 		code = e.ERROR
 		return bInfoHis, Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "获取失败",
 		}
 	} else {
 		return bInfoHis, Serializer.Response{
@@ -41,9 +42,9 @@ func (b *BaseInfoHis) AddBaseInfoHis() Serializer.Response {
 	if err != nil {
 		code = e.ERROR
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
-			Data: "",
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "创建失败",
 		}
 	} else {
 		return Serializer.Response{
