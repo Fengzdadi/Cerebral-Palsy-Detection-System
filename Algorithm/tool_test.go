@@ -7,7 +7,7 @@ import (
 
 func TestStartAlgorithm(t *testing.T) {
 	type args struct {
-		res *model.Result
+		res *model.VideoResult
 	}
 	tests := []struct {
 		name string

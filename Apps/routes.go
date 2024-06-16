@@ -3,6 +3,7 @@ package Apps
 import (
 	"Cerebral-Palsy-Detection-System/Apps/controller"
 	"Cerebral-Palsy-Detection-System/Apps/controller/GET"
+	"Cerebral-Palsy-Detection-System/Apps/controller/POST"
 	"Cerebral-Palsy-Detection-System/Apps/controller/WS/service"
 	"Cerebral-Palsy-Detection-System/Apps/middleware"
 	"github.com/gin-gonic/gin"
@@ -34,10 +35,10 @@ func CollectRoutes() {
 	// r.POST("/UserRegister", controller.UserRegister)
 
 	// Video part
-	// r.POST("/UploadVideo", POST.VideoUpload)
-	// r.POST("/StartDetection", POST.StartDetection)
-	// r.POST("/StartDetectionTest", POST.StartDetectionTest)
-
+	r.POST("/UploadVideo", POST.VideoUpload)
+	r.POST("/StartDetection", POST.StartDetection)
+	//r.POST("/StartDetectionTest", POST.StartDetectionTest)
+	r.GET("/startRecord", POST.StartFiveSecond)
 	// Database part
 
 	// New Request Part

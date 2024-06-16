@@ -3,33 +3,62 @@ package Algorithm
 import (
 	"Cerebral-Palsy-Detection-System/model"
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"regexp"
 )
 
-func StartAlgorithm(res *model.VideoResult) {
-	// star
-
-	cmd := exec.Command("cmd.exe", "/C", ".\\VProcessing\\runV2.bat")
+func PullVideo() (model.VideoResult, error) {
+	cmd := exec.Command("ffmpeg", "-i", "rtmp://150.158.87.111:1935/live", "-t", "5", "-c", "copy", "-y", ".\\VProcessing\\input.mp4")
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	//实时打印输出
-
+	var res model.VideoResult
 	if err := cmd.Run(); err != nil {
 		log.Println(fmt.Sprint(err) + ": " + stderr.String())
+		return res, err
 	}
-	fmt.Println("Result: " + out.String())
+	StartAlgorithm(&res)
+	return res, nil
+}
 
+func StartAlgorithm(res *model.VideoResult) {
+	// star
+
+	cmd := exec.Command("cmd.exe", "/C", ".\\VProcessing\\runV3.bat")
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stdout
+	//实时打印输出
+
+	if err := cmd.Run(); err != nil {
+		log.Println(fmt.Sprint(err))
+	}
+	jsonPath := ".\\VProcessing\\predictions.json"
+	cmd = exec.Command("cmd.exe", "/C", ".\\VProcessing\\runPoss.bat")
+	if err := cmd.Run(); err != nil {
+		log.Println(fmt.Sprint(err))
+	}
+	type Resp struct {
+		Probability [][]float64 `json:"probability"`
+	}
+	var resp Resp
+	file, err := os.ReadFile(jsonPath)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(file, &resp)
+	// 传给python
 	res.VideoName = 1
 	res.VideoPath = ".\\VProcessing\\output.mp4"
-	res.VideoRes = FindPrediction()
-	res.Probability = FindProbability()
+	res.Probability = resp.Probability[0][1] * 100
 }
 
 func FindPrediction() string {

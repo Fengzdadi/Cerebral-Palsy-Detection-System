@@ -46,7 +46,7 @@ type Broadcast struct {
 type ClientManager struct {
 	Clients    map[string]*Client
 	Broadcast  chan *Broadcast // 广播通道
-	Reply      chan *Client    // 回复通道
+	Reply      chan *ReplyMsg  // 回复通道
 	Register   chan *Client    // 注册通道
 	Unregister chan *Client    // 注销通道
 }
@@ -61,7 +61,7 @@ var Manager = ClientManager{
 	Clients:    make(map[string]*Client),
 	Broadcast:  make(chan *Broadcast),
 	Register:   make(chan *Client),
-	Reply:      make(chan *Client),
+	Reply:      make(chan *ReplyMsg),
 	Unregister: make(chan *Client),
 }
 
@@ -103,13 +103,14 @@ func (c *Client) Read() {
 		c.Socket.PongHandler()
 		sendMsg := new(SendMsg)
 		// _,msg,_:=c.Socket.ReadMessage()
-		err := c.Socket.ReadJSON(&sendMsg) // 读取json格式，如果不是json格式，会报错
+		err := c.Socket.ReadJSON(sendMsg) // 读取json格式，如果不是json格式，会报错
 		if err != nil {
 			log.Println("数据格式不正确", err)
 			Manager.Unregister <- c
 			_ = c.Socket.Close()
 			break
 		}
+
 		if sendMsg.Type == 1 {
 			r1, _ := Cache.RedisClient.Get(c.ID).Result()
 			r2, _ := Cache.RedisClient.Get(c.SendID).Result()
@@ -127,48 +128,28 @@ func (c *Client) Read() {
 				_, _ = Cache.RedisClient.Expire(c.ID, time.Hour*24*30*3).Result() // 防止过快“分手”，建立连接三个月过期
 			}
 			log.Println(c.ID, "发送消息", sendMsg.Content)
-			Manager.Broadcast <- &Broadcast{
-				Client:  c,
-				Message: []byte(sendMsg.Content),
+			// 插入发送消息
+			InsertMsg(Conf.MongoDBName, c.ID, sendMsg.Content, int64(time.Hour*24*30))
+			replyMsg := ReplyMsg{
+				Code:    e.WebsocketSuccess,
+				To:      c.SendID,
+				Content: sendMsg.Content,
 			}
+			Manager.Reply <- &replyMsg
 		} else if sendMsg.Type == 2 { //拉取历史消息
 			timeT, err := strconv.Atoi(sendMsg.Content) // 传送来时间
 			if err != nil {
 				timeT = 999999999
 			}
 			results, _ := FindMany(Conf.MongoDBName, c.SendID, c.ID, int64(timeT), 10)
-			if len(results) > 10 {
-				results = results[:10]
-			} else if len(results) == 0 {
-				replyMsg := ReplyMsg{
-					Code:    e.WebsocketEnd,
-					Content: "到底了",
-				}
-				msg, _ := json.Marshal(replyMsg)
-				_ = c.Socket.WriteMessage(websocket.TextMessage, msg)
-				continue
-			}
-			for _, result := range results {
-				replyMsg := ReplyMsg{
-					From:    result.From,
-					Content: fmt.Sprintf("%s", result.Msg),
-				}
-				msg, _ := json.Marshal(replyMsg)
-				_ = c.Socket.WriteMessage(websocket.TextMessage, msg)
-			}
-		} else if sendMsg.Type == 3 {
-			results, err := FirstFindtMsg(Conf.MongoDBName, c.SendID, c.ID)
-			if err != nil {
-				log.Println(err)
-			}
-			for _, result := range results {
-				replyMsg := ReplyMsg{
-					From:    result.From,
-					Content: fmt.Sprintf("%s", result.Msg),
-				}
-				msg, _ := json.Marshal(replyMsg)
-				_ = c.Socket.WriteMessage(websocket.TextMessage, msg)
-			}
+			//if len(results) > 10 {
+			//	results = results[:10]
+			//}
+			fmt.Println(results)
+			msg, _ := json.Marshal(results)
+			_ = c.Socket.WriteMessage(websocket.TextMessage, msg)
+		} else { // 找到另一个连接并发送消息
+
 		}
 	}
 }
@@ -186,6 +167,8 @@ func (c *Client) Write() {
 			}
 			log.Println(c.ID, "接受消息:", string(message))
 			replyMsg := ReplyMsg{
+				//From: c.ID,
+				//To: c.SendID,
 				Code:    e.WebsocketSuccessMessage,
 				Content: fmt.Sprintf("%s", string(message)),
 			}

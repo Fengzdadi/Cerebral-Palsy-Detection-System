@@ -4,7 +4,6 @@ import (
 	"Cerebral-Palsy-Detection-System/Algorithm"
 	"Cerebral-Palsy-Detection-System/Serializer"
 	"Cerebral-Palsy-Detection-System/model"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	logging "github.com/sirupsen/logrus"
 	"net/http"
@@ -31,16 +30,19 @@ func UserLogin(c *gin.Context) {
 		res := userLogin.Login()
 		// 从数据库查找用户的id
 		if res.Msg == "ok" {
-			var userid uint
 			var username = c.PostForm("user_name")
 
-			userid = model.GetUserid(username)
-			session := sessions.Default(c)
-			session.Set("mySession", userid)
-			err := session.Save()
-			if err != nil {
-				return
-			}
+			//userid = model.GetUserid(username)
+			//session := sessions.Default(c)
+			//session.Options(sessions.Options{
+			//	SameSite: http.SameSiteNoneMode,
+			//	Secure:   true,
+			//})
+			//session.Set("mySession", userid)
+			//err := session.Save()
+			//if err != nil {
+			//	return
+			//}
 
 			token, _ := Algorithm.GenerateToken(username)
 			c.JSON(http.StatusOK, gin.H{
@@ -61,9 +63,8 @@ func UserLogin(c *gin.Context) {
 
 func UserUpdatePwd(c *gin.Context) {
 	username := c.PostForm("user_name")
-	session := sessions.Default(c)
-	uid := session.Get("mySession").(uint)
-	if uid == model.GetUserid(username) {
+	value, _ := c.Get("user_name")
+	if username == value.(string) {
 		var userUpdatePwd model.UserUpdatePwdService
 		if err := c.ShouldBind(&userUpdatePwd); err == nil {
 			res := userUpdatePwd.Update()

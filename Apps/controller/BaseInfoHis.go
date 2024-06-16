@@ -3,15 +3,16 @@ package controller
 import (
 	"Cerebral-Palsy-Detection-System/Serializer"
 	"Cerebral-Palsy-Detection-System/model"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func GetBaseInfoHis(c *gin.Context) {
-	session := sessions.Default(c)
-	session.Get("mySession")
-	userid := session.Get("mySession")
-	b, err := model.GetBaseInfoHis(userid.(uint))
+	//session := sessions.Default(c)
+	value, _ := c.Get("user_name")
+	userid := model.GetUserid(value.(string))
+	//session.Get("mySession")
+	//userid := session.Get("mySession")
+	b, err := model.GetBaseInfoHis(userid)
 	c.JSON(200, gin.H{
 		"baseInfo": b,
 		"res":      err,
@@ -26,10 +27,9 @@ func AddBaseInfoHis(c *gin.Context) {
 		})
 		return
 	}
-	session := sessions.Default(c)
-	session.Get("mySession")
-	userid := session.Get("mySession")
-	base.BelongToChildID = userid.(uint)
+	value, _ := c.Get("user_name")
+	userid := model.GetUserid(value.(string))
+	base.BelongToChildID = userid
 	err := base.AddBaseInfoHis()
 	c.JSON(200, gin.H{
 		"res": err,

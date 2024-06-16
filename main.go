@@ -9,14 +9,10 @@ import (
 )
 
 func main() {
-
 	Init()
-
 	go service.Manager.Start()
-
 	Apps.InitWebFrameWork()
 	Apps.StartServer()
-
 }
 
 func Init() {

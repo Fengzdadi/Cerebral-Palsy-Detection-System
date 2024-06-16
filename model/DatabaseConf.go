@@ -24,11 +24,10 @@ type SessionData struct {
 }
 
 type VideoResult struct {
-	VideoName   int    `bson:"VideoName"`
-	Userid      int    `bson:"Userid"`
-	VideoPath   string `bson:"VideoPath"`
-	VideoRes    string `bson:"VideoRes"`
-	Probability string `bson:"Probability"`
+	VideoName   int     `bson:"VideoName"`
+	Userid      int     `bson:"Userid"`
+	VideoPath   string  `bson:"VideoPath"`
+	Probability float64 `bson:"Probability"`
 }
 
 type Result struct {

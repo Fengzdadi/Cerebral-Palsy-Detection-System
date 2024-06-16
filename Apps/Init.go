@@ -2,8 +2,6 @@ package Apps
 
 import (
 	"Cerebral-Palsy-Detection-System/Apps/middleware"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,12 +18,13 @@ func InitWebFrameWork() {
 	r.Use(middleware.Cors())
 
 	// Use cookie-based sessions
-	store := cookie.NewStore([]byte("loginUser"))
-	r.Use(sessions.Sessions("session", store))
+	//store := cookie.NewStore([]byte("loginUser"))
+	//r.Use(sessions.Sessions("session", store))
 
 	CollectRoutes()
+
 }
 
 func StartServer() {
-	r.Run(":8080")
+	r.Run("10.249.79.59:8080")
 }

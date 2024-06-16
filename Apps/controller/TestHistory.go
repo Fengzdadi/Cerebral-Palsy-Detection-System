@@ -3,7 +3,6 @@ package controller
 import (
 	"Cerebral-Palsy-Detection-System/Serializer"
 	"Cerebral-Palsy-Detection-System/model"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,9 +24,9 @@ func AddTestHistory(c *gin.Context) {
 }
 
 func GetTestHistory(c *gin.Context) {
-	session := sessions.Default(c)
-	userid := session.Get("mySession")
-	th, res := model.GetTestHistory(userid.(uint))
+	value, _ := c.Get("user_name")
+	userid := model.GetUserid(value.(string))
+	th, res := model.GetTestHistory(userid)
 	c.JSON(200, gin.H{
 		"res": res,
 		"th":  th,
@@ -35,10 +34,9 @@ func GetTestHistory(c *gin.Context) {
 }
 
 func GetTestHistoryYear(c *gin.Context) {
-	session := sessions.Default(c)
-	session.Get("mySession")
-	userid := session.Get("mySession")
-	thys, res := model.GetTestHisYear(userid.(uint))
+	value, _ := c.Get("user_name")
+	userid := model.GetUserid(value.(string))
+	thys, res := model.GetTestHisYear(userid)
 	c.JSON(200, gin.H{
 		"res":  res,
 		"thys": thys,

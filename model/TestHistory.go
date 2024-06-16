@@ -78,7 +78,13 @@ func GetTestHisYear(belongToChildID uint) ([]TestHisYear, Serializer.Response) {
 		day   int
 	}{}
 	DB.Model(&TestHistory{}).Where("belong_to_child_id = ?", belongToChildID).Find(&ths)
-
+	if len(ths) == 0 {
+		return nil, Serializer.Response{
+			Code:  500,
+			Msg:   e.GetMsg(500),
+			Error: "空数据",
+		}
+	}
 	var dayList []string
 	var probaList []float64
 	var year int
