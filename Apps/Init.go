@@ -26,5 +26,5 @@ func InitWebFrameWork() {
 }
 
 func StartServer() {
-	r.Run("10.249.79.59:8080")
+	r.Run(":8079")
 }

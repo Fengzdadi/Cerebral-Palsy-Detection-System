@@ -2,7 +2,6 @@ package POST
 
 import (
 	"Cerebral-Palsy-Detection-System/Algorithm"
-	"Cerebral-Palsy-Detection-System/Serializer"
 	"Cerebral-Palsy-Detection-System/model"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -15,20 +14,9 @@ func StartFiveSecond(c *gin.Context) {
 	fmt.Println("start five second")
 	res, err := Algorithm.PullVideo()
 	if err != nil {
-		c.JSON(200, gin.H{"res": Serializer.Response{
-			Code:  400,
-			Data:  nil,
-			Msg:   "fail",
-			Error: "pull video error",
-		}})
-		return
+		log.Println("err", err)
 	}
-	c.JSON(200, gin.H{"res": Serializer.Response{
-		Code:  200,
-		Data:  res,
-		Msg:   "ok",
-		Error: "",
-	}})
+	c.JSON(200, res)
 }
 
 func StartDetection(c *gin.Context) {

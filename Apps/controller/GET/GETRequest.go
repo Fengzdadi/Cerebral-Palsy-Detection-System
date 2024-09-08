@@ -13,7 +13,7 @@ func Hello(c *gin.Context) {
 }
 
 func ReturnVideoRes(c *gin.Context) {
-	videoFile, err := os.Open(".\\VProcessing\\output.mp4")
+	videoFile, err := os.Open("./VProcessing/output.mp4")
 	if err != nil {
 		c.JSON(500, gin.H{"message": "{err}"})
 		return
