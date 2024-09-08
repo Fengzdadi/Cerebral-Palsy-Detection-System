@@ -15,7 +15,7 @@ var Pool *ConnPool
 
 func DatabaseInit() {
 	var err error
-	Pool, err = NewConnPool(20)
+	//Pool, err = NewConnPool(20)
 	if err != nil {
 		log.Fatal(err)
 	}

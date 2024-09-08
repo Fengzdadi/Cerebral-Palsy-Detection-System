@@ -1,31 +1,32 @@
 package model
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/Pkg/e"
-	"Cerebral-Palsy-Detection-System/WS/Serializer"
+	"Cerebral-Palsy-Detection-System/Pkg/e"
+	"Cerebral-Palsy-Detection-System/Serializer"
 	"github.com/jinzhu/gorm"
 	logging "github.com/sirupsen/logrus"
 	"time"
 )
 
 type BaseInfoHis struct {
-	gorm            gorm.Model
-	BelongToChildID int       `gorm:"BelongToChildID"`
-	Time            time.Time `gorm:"Time"`
-	height          float64   `gorm:"height"`
-	weight          float64   `gorm:"weight"`
+	gorm.Model
+	BelongToChildID uint      `gorm:"BelongToChildID" form:"belongToChildID"`
+	Time            time.Time `gorm:"Time" form:"time"`
+	Height          float64   `gorm:"Height" form:"height"`
+	Weight          float64   `gorm:"Weight" form:"weight"`
 }
 
-func GetBaseInfoHis(belongToChildID int) ([]BaseInfoHis, Serializer.Response) {
+func GetBaseInfoHis(belongToChildID uint) ([]BaseInfoHis, Serializer.Response) {
 	var bInfoHis []BaseInfoHis
 	code := e.SUCCESS
-	err := DB.Table("BaseInfoHis").Where("BelongToChildID = ?", belongToChildID).Find(&bInfoHis).Error
+	err := DB.Table("base_info_his").Where("belong_to_child_id = ?", belongToChildID).Find(&bInfoHis).Error
 	if err != nil {
 		logging.Info(err)
-		code := e.ERROR
+		code = e.ERROR
 		return bInfoHis, Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "获取失败",
 		}
 	} else {
 		return bInfoHis, Serializer.Response{
@@ -37,13 +38,13 @@ func GetBaseInfoHis(belongToChildID int) ([]BaseInfoHis, Serializer.Response) {
 
 func (b *BaseInfoHis) AddBaseInfoHis() Serializer.Response {
 	code := e.SUCCESS
-	err := DB.Table("BaseInfoHis").Create(&b).Error
+	err := DB.Table("base_info_his").Create(&b).Error
 	if err != nil {
 		code = e.ERROR
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
-			Data: "",
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "创建失败",
 		}
 	} else {
 		return Serializer.Response{

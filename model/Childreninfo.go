@@ -1,19 +1,19 @@
 package model
 
 import (
-	"Cerebral-Palsy-Detection-System/WS/Pkg/e"
-	"Cerebral-Palsy-Detection-System/WS/Serializer"
+	"Cerebral-Palsy-Detection-System/Pkg/e"
+	"Cerebral-Palsy-Detection-System/Serializer"
 	"github.com/jinzhu/gorm"
 	logging "github.com/sirupsen/logrus"
 )
 
 type ChildrenInfo struct {
 	gorm.Model
-	BelongTo  int        `form:"BelongTo" bson:"BelongTo"`
-	ChildName string     `form:"ChildName" bson:"ChildName"`
-	Age       int        `form:"Age" bson:"Age"`
-	Gender    GenderType `form:"Gender" bson:"Gender"`
-	BirthDate string     `form:"BirthDate" bson:"BirthDate"`
+	BelongTo  uint       `form:"belongTo" bson:"BelongTo"`
+	ChildName string     `form:"childName" bson:"ChildName"`
+	Age       int        `form:"age" bson:"Age"`
+	Gender    GenderType `form:"gender" bson:"Gender"`
+	BirthDate string     `form:"birthDate" bson:"BirthDate"`
 }
 
 type GenderType string
@@ -52,17 +52,18 @@ func (c *ChildrenInfo) AddChildInfo() Serializer.Response {
 	if count > 0 {
 		code := e.ERROR
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
-			Data: "已经存在该用户了",
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "已经存在该用户了",
 		}
 	}
 	if err := DB.Table("children_info").Create(&c).Error; err != nil {
 		logging.Info(err)
 		code := e.ErrorDatabase
 		return Serializer.Response{
-			Code: code,
-			Msg:  e.GetMsg(code),
+			Code:  code,
+			Msg:   e.GetMsg(code),
+			Error: "创建失败",
 		}
 	}
 	return Serializer.Response{
